@@ -68,9 +68,8 @@
           rm -rf dist
           cp -Lr "$result" dist
           chmod -R 700 dist
-          err_code=0
-          npm publish || err_code=$?
-          echo "$err_code"
+          npm publish --dry-run
+          npm publish || true
         '';
       };
     in
