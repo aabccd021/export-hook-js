@@ -66,8 +66,9 @@
           fi
           result=$(nix build --no-link --print-out-paths .#dist)
           rm -rf dist
-          cp -Lr "$result" dist
-          chmod -R 700 dist
+          mkdir dist
+          cp -Lr "$result"/* dist
+          chmod 400 dist/*
           npm publish --dry-run
           npm publish || true
         '';
