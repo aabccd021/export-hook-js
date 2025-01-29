@@ -21,7 +21,7 @@
       };
 
       tsc = pkgs.runCommandNoCCLocal "tsc" { } ''
-        cp -L ${./hook.ts} ./hook.ts
+        cp -L ${./export-hook.ts} ./export-hook.ts
         cp -L ${./tsconfig.json} ./tsconfig.json
         ${pkgs.typescript}/bin/tsc
         touch $out
@@ -29,7 +29,7 @@
 
       biome = pkgs.runCommandNoCCLocal "biome" { } ''
         cp -L ${./biome.jsonc} ./biome.jsonc
-        cp -L ${./hook.ts} ./hook.ts
+        cp -L ${./export-hook.ts} ./export-hook.ts
         cp -L ${./package.json} ./package.json
         cp -L ${./tsconfig.json} ./tsconfig.json
         ${pkgs.biome}/bin/biome check --error-on-warnings
@@ -38,13 +38,13 @@
 
       dist = pkgs.runCommandNoCCLocal "dist" { } ''
         mkdir  $out
-        ${pkgs.esbuild}/bin/esbuild ${./hook.ts} \
+        ${pkgs.esbuild}/bin/esbuild ${./export-hook.ts} \
           --bundle \
           --format=esm \
           --minify \
           --sourcemap \
           --outfile="$out/export-hook.min.js"
-        ${pkgs.esbuild}/bin/esbuild ${./hook.ts} \
+        ${pkgs.esbuild}/bin/esbuild ${./export-hook.ts} \
           --bundle \
           --format=esm \
           --target=es2022 \
