@@ -44,6 +44,13 @@
           --minify \
           --sourcemap \
           --outfile="$out/export-hook.min.js"
+        ${pkgs.esbuild}/bin/esbuild ${./hook.ts} \
+          --bundle \
+          --format=esm \
+          --target=es2022 \
+          --minify \
+          --sourcemap \
+          --outfile="$out/export-hook.es2022.min.js"
       '';
 
       packages = {
