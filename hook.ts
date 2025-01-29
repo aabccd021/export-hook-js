@@ -16,10 +16,10 @@ for (const script of Array.from(scripts)) {
     if (fnName === undefined) {
       continue;
     }
-    if (!key.startsWith("hook")) {
+    if (!key.startsWith("exportHook")) {
       continue;
     }
-    const exportFnName = key.replace("hook", "");
+    const exportFnName = key.replace("exportHook", "");
     const hookEntryPromise: Promise<HookEntry> = import(script.src).then((module) => [exportFnName, module[fnName]]);
     hookEntryPromises.push(hookEntryPromise);
   }
