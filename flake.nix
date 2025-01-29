@@ -61,6 +61,7 @@
         name = "publish";
         text = ''
           nix flake check
+          npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
           result=$(nix build --no-link --print-out-paths .#dist)
           rm -rf dist
           cp -Lr "$result" dist
