@@ -68,7 +68,9 @@
           rm -rf dist
           cp -Lr "$result" dist
           chmod -R 700 dist
-          npm publish
+          err_code=0
+          npm publish || err_code=$?
+          echo "$err_code"
         '';
       };
     in
