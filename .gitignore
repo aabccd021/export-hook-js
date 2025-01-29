@@ -1,2 +1,5 @@
 .direnv
+.gcroot
 node_modules
+dist
+result

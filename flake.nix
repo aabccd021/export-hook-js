@@ -36,14 +36,37 @@
         touch $out
       '';
 
+      dist = pkgs.runCommandNoCCLocal "dist" { } ''
+        mkdir  $out
+        ${pkgs.esbuild}/bin/esbuild ${./hook.ts} \
+          --bundle \
+          --format=esm \
+          --minify \
+          --sourcemap \
+          --outfile="$out/export-hook.min.js"
+      '';
+
       packages = {
         formatting = treefmtEval.config.build.check self;
         tsc = tsc;
         biome = biome;
+        dist = dist;
       };
 
       gcroot = packages // {
         gcroot-all = pkgs.linkFarm "gcroot-all" packages;
+      };
+
+      publish = pkgs.writeShellApplication {
+        name = "publish";
+        text = ''
+          nix flake check
+          result=$(nix build --no-link --print-out-paths .#dist)
+          rm -rf dist
+          cp -Lr "$result" dist
+          chmod -R 700 dist
+          npm publish
+        '';
       };
     in
     {
@@ -63,5 +86,9 @@
         ];
       };
 
+      apps.x86_64-linux.publish = {
+        type = "app";
+        program = "${publish}/bin/publish";
+      };
     };
 }
