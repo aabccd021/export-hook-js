@@ -42,8 +42,8 @@
         ${pkgs.esbuild}/bin/esbuild ${./export-hook.ts} \
           --bundle \
           --format=esm \
+          --target=es2022 \
           --minify \
-          --sourcemap \
           --outfile="$out/export-hook.min.js"
 
         ${pkgs.esbuild}/bin/esbuild ${./export-hook.ts} \
@@ -51,15 +51,13 @@
           --format=esm \
           --target=esnext \
           --minify \
-          --sourcemap \
-          --outfile="$out/export-hook.es2022.min.js"
+          --outfile="$out/export-hook.esnext.min.js"
 
         ${pkgs.esbuild}/bin/esbuild ${./export-hook.ts} \
           --bundle \
           --format=esm \
           --target=esnext \
-          --sourcemap \
-          --outfile="$out/export-hook.es2022.js"
+          --outfile="$out/export-hook.esnext.js"
       '';
 
       packages = {
