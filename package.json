@@ -1,11 +1,10 @@
 {
   "name": "export-hook-js",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Export moules functions as hooks",
   "author": "aabccd021",
   "license": "MIT",
   "files": ["dist"],
-  "main": "dist/export-hook.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aabccd021/export-hook-js.git"

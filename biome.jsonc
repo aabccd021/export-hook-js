@@ -26,7 +26,8 @@
         "all": true
       },
       "complexity": {
-        "all": true
+        "all": true,
+        "useLiteralKeys": "off"
       },
       "suspicious": {
         "all": true,

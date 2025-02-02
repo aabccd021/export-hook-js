@@ -58,6 +58,26 @@
           --format=esm \
           --target=esnext \
           --outfile="$out/export-hook.esnext.js"
+
+        ${pkgs.esbuild}/bin/esbuild ${./invoke-hook.ts} \
+          --bundle \
+          --format=esm \
+          --target=es6 \
+          --minify \
+          --outfile="$out/invoke-hook.min.js"
+
+        ${pkgs.esbuild}/bin/esbuild ${./invoke-hook.ts} \
+          --bundle \
+          --format=esm \
+          --target=esnext \
+          --minify \
+          --outfile="$out/invoke-hook.esnext.min.js"
+
+        ${pkgs.esbuild}/bin/esbuild ${./invoke-hook.ts} \
+          --bundle \
+          --format=esm \
+          --target=esnext \
+          --outfile="$out/invoke-hook.esnext.js"
       '';
 
       packages = {
