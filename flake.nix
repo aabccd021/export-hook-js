@@ -17,7 +17,7 @@
         programs.shfmt.enable = true;
         settings.formatter.prettier.priority = 1;
         settings.formatter.biome.priority = 2;
-        settings.global.excludes = [ "LICENSE" "*.ico" ];
+        settings.global.excludes = [ "LICENSE" ];
       };
 
       tsc = pkgs.runCommandNoCCLocal "tsc" { } ''
@@ -38,19 +38,28 @@
 
       dist = pkgs.runCommandNoCCLocal "dist" { } ''
         mkdir  $out
+
         ${pkgs.esbuild}/bin/esbuild ${./export-hook.ts} \
           --bundle \
           --format=esm \
           --minify \
           --sourcemap \
           --outfile="$out/export-hook.min.js"
+
         ${pkgs.esbuild}/bin/esbuild ${./export-hook.ts} \
           --bundle \
           --format=esm \
-          --target=es2022 \
+          --target=esnext \
           --minify \
           --sourcemap \
           --outfile="$out/export-hook.es2022.min.js"
+
+        ${pkgs.esbuild}/bin/esbuild ${./export-hook.ts} \
+          --bundle \
+          --format=esm \
+          --target=esnext \
+          --sourcemap \
+          --outfile="$out/export-hook.es2022.js"
       '';
 
       packages = {
