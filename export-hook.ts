@@ -1,38 +1,41 @@
-const scripts = document.querySelectorAll("script");
-
 type Hook = (...args: unknown[]) => unknown;
 
-type HookEntry = [string, Hook];
+type LoadHooks = <T extends string[]>(hookNames: T) => Promise<{ [K in keyof T]: Hook[] }>;
 
-const hookEntryPromises: Promise<HookEntry>[] = [];
+async function loadHook(hookName: string): Promise<Hook[]> {
+  const hookLoadPromises: Promise<Hook>[] = [];
 
-for (const script of Array.from(scripts)) {
-  if (script.type !== "module") {
-    console.error(`script tag ${script.src} must have type=module`);
-    continue;
-  }
-
-  for (const [key, fnName] of Object.entries(script.dataset)) {
-    if (fnName === undefined) {
+  for (const script of Array.from(document.querySelectorAll("script"))) {
+    if (script.type !== "module") {
       continue;
     }
-    if (!key.startsWith("exportHook")) {
-      continue;
+    for (const [dataKey, fnName] of Object.entries(script.dataset)) {
+      if (fnName !== undefined && dataKey.startsWith("exportHook") && dataKey.replace("exportHook", "") === hookName) {
+        hookLoadPromises.push(import(script.src).then((module): Hook => module[fnName]));
+      }
     }
-    const exportFnName = key.replace("exportHook", "");
-    const hookEntryPromise: Promise<HookEntry> = import(script.src).then((module) => [exportFnName, module[fnName]]);
-    hookEntryPromises.push(hookEntryPromise);
   }
+
+  const hookLoads = await Promise.allSettled(hookLoadPromises);
+
+  for (const result of hookLoads) {
+    if (result.status === "rejected") {
+      console.error(result.reason);
+    }
+  }
+
+  return hookLoads.filter((hookLoad) => hookLoad.status === "fulfilled").map((result) => result.value);
 }
 
-const hooksEntrySettled = await Promise.allSettled(hookEntryPromises);
+export const loadHooks: LoadHooks = async <T extends string[]>(hookNames: T) => {
+  const hookLoads = await Promise.allSettled(hookNames.map(loadHook));
 
-for (const result of hooksEntrySettled) {
-  if (result.status === "rejected") {
-    console.error(result.reason);
+  for (const result of hookLoads) {
+    if (result.status === "rejected") {
+      console.error(result.reason);
+    }
   }
-}
 
-export const hooks: HookEntry[] = hooksEntrySettled
-  .filter((result) => result.status === "fulfilled")
-  .map((result) => result.value);
+  const hooks: Hook[][] = hookLoads.map((result) => (result.status === "fulfilled" ? result.value : []));
+  return hooks as { [K in keyof T]: Hook[] };
+};

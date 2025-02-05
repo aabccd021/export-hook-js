@@ -42,7 +42,7 @@
         ${pkgs.esbuild}/bin/esbuild ${./export-hook.ts} \
           --bundle \
           --format=esm \
-          --target=es2022 \
+          --target=es6 \
           --minify \
           --outfile="$out/export-hook.min.js"
 

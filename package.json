@@ -1,6 +1,6 @@
 {
   "name": "export-hook-js",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Export moules functions as hooks",
   "author": "aabccd021",
   "license": "MIT",
