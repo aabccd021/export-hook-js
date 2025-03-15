@@ -88,7 +88,7 @@
       };
 
       gcroot = packages // {
-        gcroot-all = pkgs.linkFarm "gcroot-all" packages;
+        gcroot = pkgs.linkFarm "gcroot" packages;
       };
 
       publish = pkgs.writeShellApplication {
